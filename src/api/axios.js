@@ -11,6 +11,6 @@ axiosInstance.interceptors.response.use(function (response) {
 }, function (error) {
   let cleanError = (error.response && error.response.data) || error
   return Promise.reject(cleanError)
-});
+})
 
 export default axiosInstance

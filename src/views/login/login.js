@@ -1,34 +1,19 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import userApi from 'api/user';
 import LoginFormValidaiton from 'form/login';
 import Input from 'components/form/input';
-import { observer } from 'mobx-react';
-import { extendObservable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import classNames from 'classnames';
 
 class Login extends Component {
   constructor(props) {
     super(props)
     this.form = LoginFormValidaiton()
-    extendObservable(this, {
-      loading: false,
-      error: null
-    })
   }
+
   loginUser = () => {
     const { email, password } = this.form.values()
-    this.error = null
-    this.loading = true
-    userApi.login({ email, password })
-      .then(response => {
-        this.loading = false
-        console.log('response', response)
-      })
-      .catch(error => {
-        this.loading = false
-        this.error = error.message || 'Unknown error occured'
-        console.error('error', error)
-      })
+    this.props.userStore.login({ email, password })
   }
 
   showErrors = form => {
@@ -56,19 +41,26 @@ class Login extends Component {
   }
 
   render() {
+    const {error, loading} = this.props.userStore
+    const buttonClasses = classNames({
+      'button': true,
+      'is-link': true,
+      'is-loading': loading
+    });
+
     return (
       <div className="login">
         <h2 className="title">Login</h2>
         <form className="form" onSubmit={this.onSubmit}>
 
-          {this.renderError(this.error)}
+          {this.renderError(error)}
 
           <Input field={this.form.$('email')} />
-          <Input field={this.form.$('password')} />
+          <Input field={this.form.$('password')} type="password" />
 
           <div className="field is-grouped">
             <div className="control">
-              <button onClick={this.onSubmit} className="button is-link">Login</button>
+              <button onClick={this.onSubmit} className={buttonClasses} disabled={loading}>Login</button>
             </div>
             <div className="control">
               <Link className="button is-text" to="/signup">No account? Sign in here!</Link>
@@ -79,4 +71,4 @@ class Login extends Component {
     )
   }
 }
-export default observer(Login);
+export default inject('userStore')(observer(Login));
