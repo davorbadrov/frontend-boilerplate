@@ -4,26 +4,34 @@ import validator from './Validator';
 const fields = [
   'name',
   'email',
-  'password'
+  'password',
+  'avatar'
 ];
 
 const rules = {
   name: 'string|required',
   email: 'email|string|required',
-  password: 'required|string|between:2,128'
+  password: 'required|string|between:2,128',
+  avatar: 'string'
 };
 
 const labels = {
   name: 'Name',
   email: 'Email',
-  password: 'Password'
+  password: 'Password',
+  avatar: 'Avatar'
 };
 
 const values = {
   name: '',
   email: '',
-  password: ''
+  password: '',
+  avatar: '',
 };
+
+const types = {
+  avatar: 'file'
+}
 
 export default function SignUpValidationForm() {
   class ValidationForm extends Form {
@@ -32,7 +40,7 @@ export default function SignUpValidationForm() {
     }
 
     setup() {
-      return { fields, rules, labels, values };
+      return { fields, rules, labels, values, types };
     }
 
     options() {

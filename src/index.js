@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import 'bulma/css/bulma.css'
 import App from './App'
+import './styles/overrides.css';
 
 const appRoot = document.getElementById('root')
 ReactDOM.render(<App />, appRoot)

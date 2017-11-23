@@ -7,11 +7,13 @@ export function login ({email, password}) {
   })
 }
 
-export function register ({name, email, password}) {
+// @TODO send as multipart data
+export function register ({name, email, password, avatar}) {
   return api.post('/api/users/register', {
     name,
     email,
-    password
+    password,
+    avatar
   })
 }
 

@@ -7,6 +7,7 @@ import {
 import Login from './views/login'
 import SignUp from './views/signup'
 import Home from './views/home'
+import Profile from './views/profile'
 import stores from './stores'
 import { Provider, observer } from 'mobx-react'
 import './App.css'
@@ -38,12 +39,14 @@ const AuthenticatedRoutes = observer(({stores}) => {
         <div>
           <ul>
             <li><Link className="button is-text" to="/">Home</Link></li>
+            <li><Link className="button is-text" to="/profile">Profile</Link></li>
             <li><button className="button is-text" href="/" onClick={stores.userStore.logout}>Log out</button></li>
           </ul>
 
           <hr/>
 
-          <Route path="/" component={Home}/>
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/profile" component={Profile}/>
         </div>
       </Router>
     </Provider>

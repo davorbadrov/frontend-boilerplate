@@ -21,6 +21,7 @@ const values = {
   password: ''
 };
 
+// leave it as a function so options/overloads can be passed in
 export default function LoginValidationForm() {
   class ValidationForm extends Form {
     plugins() {

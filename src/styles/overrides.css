@@ -1,0 +1,12 @@
+/**
+* Contains CSS overrides of 3rd party libs.
+*/
+
+/* overrides for file-input from bulma.io */
+.field, .file-name {
+    max-width: 100%;
+}
+
+.file-label {
+    width: 100%
+}

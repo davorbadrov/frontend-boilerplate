@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import LoginFormValidaiton from 'form/login';
+import LoginFormValidation from 'form/login';
 import Input from 'components/form/input';
 import { inject, observer } from 'mobx-react';
 import classNames from 'classnames';
@@ -8,7 +8,7 @@ import classNames from 'classnames';
 class Login extends Component {
   constructor(props) {
     super(props)
-    this.form = LoginFormValidaiton()
+    this.form = LoginFormValidation()
   }
 
   loginUser = () => {
@@ -34,8 +34,8 @@ class Login extends Component {
 
     return (
       <div className="notification is-danger">
-        <button onClick={() => this.error = null} className="delete"></button>
-        {this.error}
+        <button onClick={this.props.userStore.clearError} className="delete"></button>
+        {error}
       </div>
     )
   }
@@ -50,7 +50,7 @@ class Login extends Component {
 
     return (
       <div className="login">
-        <h2 className="title">Login</h2>
+        <h2 className="title">Page: Login</h2>
         <form className="form" onSubmit={this.onSubmit}>
 
           {this.renderError(error)}
@@ -60,7 +60,7 @@ class Login extends Component {
 
           <div className="field is-grouped">
             <div className="control">
-              <button onClick={this.onSubmit} className={buttonClasses} disabled={loading}>Login</button>
+              <button onClick={this.onSubmit} className={buttonClasses} disabled={loading}>Page: Login</button>
             </div>
             <div className="control">
               <Link className="button is-text" to="/signup">No account? Sign in here!</Link>
