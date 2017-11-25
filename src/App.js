@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Login from './views/login'
 import SignUp from './views/signup'
+import SignUpSuccessful from './views/signup-successful'
 import Home from './views/home'
 import Profile from './views/profile'
 import stores from './stores'
@@ -18,14 +19,15 @@ const UnauthenticatedRoutes = observer(() => {
       <Router>
         <div>
           <ul>
-            <li><Link className="button is-text" to="/login">Login</Link></li>
+            <li><Link className="button is-text" to="/">Login</Link></li>
             <li><Link className="button is-text" to="/signup">Sign up</Link></li>
           </ul>
 
           <hr/>
 
-          <Route path="/login" component={Login}/>
+          <Route exact path="/" component={Login}/>
           <Route path="/signup" component={SignUp}/>
+          <Route path="/signup-successful" component={SignUpSuccessful}/>
         </div>
       </Router>
     </Provider>
@@ -59,7 +61,7 @@ const Routes = ({history}) => {
     return <div>Loading...</div>
   }
 
-  if (!stores.userStore.user) {
+  if (!stores.userStore.isLoggedIn) {
     return <UnauthenticatedRoutes />
   } else {
     return <AuthenticatedRoutes stores={stores} />

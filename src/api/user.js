@@ -1,4 +1,5 @@
 import api from './axios'
+import {convertJsonToFormData} from 'utility/form-data'
 
 export function login ({email, password}) {
   return api.post('/api/users/login', {
@@ -9,12 +10,8 @@ export function login ({email, password}) {
 
 // @TODO send as multipart data
 export function register ({name, email, password, avatar}) {
-  return api.post('/api/users/register', {
-    name,
-    email,
-    password,
-    avatar
-  })
+  const formData = convertJsonToFormData({name, email, password, avatar})
+  return api.post('/api/users/register', formData)
 }
 
 export function get () {

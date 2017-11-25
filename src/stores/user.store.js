@@ -1,4 +1,4 @@
-import {extendObservable, action} from 'mobx'
+import { action, computed, extendObservable } from 'mobx'
 import axios from 'api/axios'
 import userApi from 'api/user'
 import tokenStorage from 'utility/token'
@@ -11,7 +11,10 @@ class UserStore {
       user: null,
       token: tokenStorage.get(),
       loading: false,
-      error: null
+      loginInProgress: false,
+      signupInProgress: false,
+      error: null,
+      isLoggedIn: computed(() => !!this.token)
     })
 
     if (this.token) {
@@ -20,38 +23,35 @@ class UserStore {
     }
   }
 
-  login = action(({email, password}) => {
+  login = action(({ email, password }) => {
     this.error = null
-    this.loading = true
+    this.loginInProgress = true
     return userApi.login({ email, password })
-      .then(({token, user}) => {
-        this.loading = false
+      .then(({ token, user }) => {
+        this.loginInProgress = false
         this.user = user
         this.token = token
         tokenStorage.save(token)
       })
       .catch(error => {
         this.error = error.message || GENERIC_ERROR_MESSAGE
-        this.loading = false
+        this.loginInProgress = false
       })
   })
 
-  signup = action(({name, email, password, avatar}) => {
-    console.log(`signup data ${name}, ${email}, ${password}, ${avatar}`)
-
-    // this.error = null
-    // this.loading = true
-    // return userApi.register({ name, email, password, avatar })
-    //   .then(({token, user}) => {
-    //     this.loading = false
-    //     this.user = user
-    //     this.token = token
-    //     tokenStorage.save(token)
-    //   })
-    //   .catch(error => {
-    //     this.error = error.message || GENERIC_ERROR_MESSAGE
-    //     this.loading = false
-    //   })
+  signup = action(({ name, email, password, avatar }) => {
+    this.error = null
+    this.signupInProgress = true
+    return userApi.register({ name, email, password, avatar })
+      .then((userData) => {
+        this.user = userData
+        this.signupInProgress = false
+        return userData
+      })
+      .catch(error => {
+        this.error = error.message || GENERIC_ERROR_MESSAGE
+        this.signupInProgress = false
+      })
   })
 
   logout = action(() => {
@@ -72,6 +72,10 @@ class UserStore {
       .catch(error => {
         this.loading = false
         this.error = error.message || GENERIC_ERROR_MESSAGE
+
+        if (error.statusCode === 401 && error.message === 'Invalid token format') {
+          this.logout();
+        }
       })
   })
 

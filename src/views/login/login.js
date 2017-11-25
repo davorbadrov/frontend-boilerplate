@@ -41,11 +41,11 @@ class Login extends Component {
   }
 
   render() {
-    const {error, loading} = this.props.userStore
+    const {error, loginInProgress} = this.props.userStore
     const buttonClasses = classNames({
       'button': true,
       'is-link': true,
-      'is-loading': loading
+      'is-loading': loginInProgress
     });
 
     return (
@@ -60,7 +60,7 @@ class Login extends Component {
 
           <div className="field is-grouped">
             <div className="control">
-              <button onClick={this.onSubmit} className={buttonClasses} disabled={loading}>Page: Login</button>
+              <button onClick={this.onSubmit} className={buttonClasses} disabled={loginInProgress}>Page: Login</button>
             </div>
             <div className="control">
               <Link className="button is-text" to="/signup">No account? Sign in here!</Link>

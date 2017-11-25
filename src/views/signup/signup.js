@@ -1,37 +1,42 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import SignupFormValidation from 'form/register'
 import Input from 'components/form/input'
 import FileInput from 'components/form/file'
 import { inject, observer } from 'mobx-react'
 import classNames from 'classnames'
+import { extendObservable } from 'mobx';
 
 
 class Signup extends Component {
   constructor(props) {
     super(props)
     this.form = SignupFormValidation()
-
-    // expose for debugging
-    window.signupform = this.form
   }
 
-  loginUser = () => {
+  registerUser = () => {
+    const {userStore, history} = this.props;
     const { email, password, name } = this.form.values()
     const [avatar] = this.form.$('avatar').files || []
 
-    this.props.userStore.signup({ email, password, name, avatar })
+    userStore.signup({ email, password, name, avatar })
+      .then(data => {
+        if (userStore.user && !userStore.error) {
+          console.log(`user registered!!`);
+          history.replace('/signup-successful')
+        }
+      })
   }
 
   showErrors = form => {
     const errors = form.errors()
     console.error('login form errors', errors)
-    // trigger a growl or popup
+    // trigger a growl or popup?
   }
 
   onSubmit = e => {
     this.form.onSubmit(e, {
-      onSuccess: this.loginUser,
+      onSuccess: this.registerUser,
       onError: this.showErrors
     })
   }
@@ -48,11 +53,11 @@ class Signup extends Component {
   }
 
   render() {
-    const {error, loading} = this.props.userStore
+    const {error, signupInProgress} = this.props.userStore
     const buttonClasses = classNames({
       'button': true,
       'is-link': true,
-      'is-loading': loading
+      'is-loading': signupInProgress
     })
 
     return (
@@ -70,7 +75,7 @@ class Signup extends Component {
 
           <div className="field is-grouped">
             <div className="control">
-              <button onClick={this.onSubmit} className={buttonClasses} disabled={loading}>Page: Login</button>
+              <button onClick={this.onSubmit} className={buttonClasses} disabled={signupInProgress}>Sign up</button>
             </div>
             <div className="control">
               <Link className="button is-text" to="/signup">No account? Sign in here!</Link>
@@ -92,4 +97,4 @@ class Signup extends Component {
   }
 }
 
-export default inject('userStore')(observer(Signup))
+export default withRouter(inject('userStore')(observer(Signup)))
